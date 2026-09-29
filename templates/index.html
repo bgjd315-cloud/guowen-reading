@@ -57,10 +57,10 @@
   <div class="eyebrow">會考國文 111–115 年 · 學測國文 107–115 年 · 共 560 題</div>
   <h1>國文閱讀理解判讀</h1>
   <p class="lede">依 PISA 閱讀歷程，把會考與學測國文的每一題標上「考哪一種閱讀能力」「錯誤選項設了什麼陷阱」，並附一句判讀與答題提示。這一頁看整體規律與各能力的答題方法，題庫可以依能力、陷阱逐題練習。</p>
-  <div class="cta"><a class="btn" href="bank/">進入判讀題庫 →</a><a class="btn ghost" href="guowen/">會考國文命題分析</a><a class="btn ghost" href="xuece/">學測國文命題分析</a></div>
+  <div class="cta"><a class="btn" href="bank/">進入判讀題庫 →</a><a class="btn" href="practice/">隨機練習 10 題 →</a><a class="btn ghost" href="guowen/">會考國文命題分析</a><a class="btn ghost" href="xuece/">學測國文命題分析</a></div>
   <p class="meta">資料來源：國中教育會考、大考中心公布之試題與答案｜能力與陷阱分類為本站逐題判讀，並非官方分類｜整理日期：2026-09-29</p>
 </header>
-<nav class="toc" aria-label="本頁目錄"><a href="#find">重點發現</a><a href="#frame">能力框架</a><a href="#dist">能力分布</a><a href="#skills">各能力答題方法</a><a href="#traps">陷阱類型</a><a href="#bridge">會考到學測</a><a href="#method">資料與方法</a></nav>
+<nav class="toc" aria-label="本頁目錄"><a href="practice/">練習卷</a><a href="#find">重點發現</a><a href="#frame">能力框架</a><a href="#dist">能力分布</a><a href="#skills">各能力答題方法</a><a href="#traps">陷阱類型</a><a href="#bridge">會考到學測</a><a href="#method">資料與方法</a></nav>
 
 <section id="find">
   <div class="sec-head"><span class="kicker">FINDINGS</span><h2>五個重點發現</h2></div>
@@ -207,14 +207,14 @@ $("skillCards").innerHTML=SKS.map(s=>{
   <h4>答題方法</h4><ol>${STRAT[s].how.map(x=>`<li>${x}</li>`).join("")}</ol>
   ${top.length?`<h4>常見陷阱</h4><p>${top.map(([t,v])=>`<span class="chip tr">${TR[t].name}</span> ${v} 題`).join("　")}</p>`:""}
   <h4>代表題</h4><div class="ex">${ex.map(it=>`<a href="${bank(`#q=${it[0]}-${it[1]}-${it[2]}`)}">${EXAM[it[0]]} ${it[1]} 年第 ${it[2]} 題　${esc(it[3])}<br><small>${esc(it[7])}</small></a>`).join("")}</div>
-  <a href="${bank("#sk="+s)}">看全部 ${arr.length} 題 →</a></article>`;
+  <p><a href="${bank("#sk="+s)}">看全部 ${arr.length} 題 →</a>　<a href="practice/#sk=${s}">練這個能力 10 題 →</a></p></article>`;
 }).join("");
 
 // 陷阱卡片
 const nonK=ITEMS.filter(it=>it[5]!=="K"&&it[6]!=="T0");
 $("trapCards").innerHTML=TRS.map(t=>{
   const arr=ITEMS.filter(it=>it[6]===t), ex=arr.filter(it=>it[5]!=="K").slice(-1)[0]||arr.slice(-1)[0];
-  return `<div class="trap"><div class="top"><h3>${TR[t].name}</h3><span>${arr.length} 題</span></div><p>${TR[t].tip}</p>${ex?`<a href="${bank(`#q=${ex[0]}-${ex[1]}-${ex[2]}`)}">例：${EXAM[ex[0]]} ${ex[1]} 年第 ${ex[2]} 題　${esc(ex[3])}</a>`:""}<a href="${bank("#tr="+t)}">看全部 →</a></div>`;
+  return `<div class="trap"><div class="top"><h3>${TR[t].name}</h3><span>${arr.length} 題</span></div><p>${TR[t].tip}</p>${ex?`<a href="${bank(`#q=${ex[0]}-${ex[1]}-${ex[2]}`)}">例：${EXAM[ex[0]]} ${ex[1]} 年第 ${ex[2]} 題　${esc(ex[3])}</a>`:""}<a href="${bank("#tr="+t)}">看全部 →</a><a href="practice/#tr=${t}">練這個陷阱 10 題 →</a></div>`;
 }).join("");
 const xmax=Math.max(...MAIN.flatMap(s=>TRS.map(t=>nonK.filter(it=>it[5]===s&&it[6]===t).length)));
 $("xHead").innerHTML=`<tr><th>能力</th>${TRS.map(t=>`<th class="n">${TR[t].name}</th>`).join("")}</tr>`;

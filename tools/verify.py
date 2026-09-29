@@ -14,7 +14,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGES = ["", "bank/", "bank/#sk=B4&tr=T3", "guowen/", "xuece/"]
+PAGES = ["", "bank/", "bank/#sk=B4&tr=T3", "practice/", "practice/#tr=T3", "guowen/", "xuece/"]
 
 
 def serve(directory, port):

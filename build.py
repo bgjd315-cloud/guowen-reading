@@ -108,25 +108,31 @@ def main():
 
     # 閱讀理解總覽（首頁）與判讀題庫
     sys.path.insert(0, str(ROOT / "tools"))
-    from reading_data import build_reading
+    from reading_data import build_reading, build_practice
     items = build_reading(ROOT)["items"]
+    practice = build_practice(ROOT)
     shared = {
         "{{reading_css}}": (ROOT / "templates" / "_reading.css").read_text("utf-8"),
         "{{reading_js}}": (ROOT / "templates" / "_reading.js").read_text("utf-8"),
     }
-    for name, out in (("index", DIST / "index.html"), ("bank", DIST / "bank" / "index.html")):
+
+    def js(obj):
+        return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+    for name, out in (("index", DIST / "index.html"), ("bank", DIST / "bank" / "index.html"),
+                      ("practice", DIST / "practice" / "index.html")):
         html = (ROOT / "templates" / f"{name}.html").read_text("utf-8")
         for k, v in shared.items():
             html = html.replace(k, v)
-        # 總覽頁不需要題目文字，只放判讀欄位
+        # 總覽頁不需要題目文字，只放判讀欄位；練習卷改用試卷圖片裁切資料
         data = items if name == "bank" else [it[:8] for it in items]
-        html = html.replace("{{reading}}", json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+        html = html.replace("{{reading}}", js(data)).replace("{{practice}}", js(practice))
         left = re.findall(r"\{\{[^}]+\}\}", html)
         if left:
             sys.exit(f"[錯誤] {name} 還有未替換的佔位符：{sorted(set(left))}")
         out.parent.mkdir(exist_ok=True)
         out.write_text(finish(html), "utf-8")
-    print(f"閱讀判讀：{len(items)} 題")
+    print(f"閱讀判讀：{len(items)} 題；練習卷選擇題 {len(practice['items'])} 題")
     (DIST / "robots.txt").write_text("User-agent: *\nDisallow: /\n", "utf-8")
     (DIST / ".nojekyll").write_text("", "utf-8")
     print(f"完成：{DIST}")

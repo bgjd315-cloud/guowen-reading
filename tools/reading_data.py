@@ -40,6 +40,35 @@ def build_reading(root):
     return {"items": items}
 
 
+def build_practice(root):
+    """練習卷用資料：只收選擇題，附題目與題組選文在試卷圖片上的裁切範圍。
+
+    回傳 {"pages": {"e-y": [w, h]}, "groups": {"e-y-a": slices}, "items": [...]}，
+    item = [考試, 年度, 題號, 答案, 能力, 陷阱, 提示, 考點, 題目裁切, 題組代號或"", 選項數]。
+    """
+    root = Path(root)
+    reading = {(it[0], it[1], it[2]): it for it in build_reading(root)["items"]}
+    pages, groups, items = {}, {}, []
+    for ei, subj in enumerate(EXAMS):
+        for f in sorted((root / "data" / subj).glob("1[0-9][0-9].json")):
+            y = int(f.stem)
+            ex = json.loads(f.read_text("utf-8"))["json:examData"]
+            pages[f"{ei}-{y}"] = [ex["w"], ex["h"]]
+            for q in ex["q"]:
+                it = reading[(ei, y, q["n"])]
+                ans = it[4]
+                if not re.fullmatch(r"[A-E]+", ans):
+                    continue  # 非選擇題不收
+                g = next((g for g in ex["g"] if g["a"] <= q["n"] <= g["b"]), None)
+                gid = ""
+                if g:
+                    gid = f"{ei}-{y}-{g['a']}"
+                    groups[gid] = g["s"]
+                nopt = 5 if len(ans) > 1 or "(E)" in q.get("t", "") else 4
+                items.append([ei, y, q["n"], ans, it[5], it[6], it[7], it[3], q["s"], gid, nopt])
+    return {"pages": pages, "groups": groups, "items": items}
+
+
 if __name__ == "__main__":
     from collections import Counter
     idx = build_reading(Path(__file__).resolve().parents[1])

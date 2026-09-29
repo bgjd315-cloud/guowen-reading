@@ -22,6 +22,7 @@
   --mark:#6B5A12;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:15.5px;line-height:1.75;padding:0 16px 64px}
 .wrap{max-width:1000px;margin:0 auto}
 h1,h2,h3{font-family:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;text-wrap:balance;margin:0;line-height:1.3}
